@@ -5,6 +5,8 @@ import userRouter from "./routes/userRoutes";
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/", (req, res: express.Response) => {
   res.send("home");
 });
