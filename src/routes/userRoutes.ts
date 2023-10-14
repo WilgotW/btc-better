@@ -4,31 +4,30 @@ import AuthController from "../controllers/authController";
 const userRouter = Router();
 const authController = new AuthController();
 
-userRouter.post("/register", (req: Request, res: Response) => {
+userRouter.post("/register", async (req: Request, res: Response) => {
   const data = req.body;
   //   res.json(data);
 
   const username = data.username;
+  const email = data.email;
   const password = data.password;
 
-  if (username && password) {
-    const user = authController.register(username, password);
+  console.log(data);
+
+  if (username && password && email) {
+    const user = await authController.register(username, email, password);
     res.json(user);
   } else {
     res.status(400).send("error");
   }
 });
 
-userRouter.get("/test", (req: Request, res: Response) => {
-  res.send("hello");
-});
-
-userRouter.post("/login", (req: Request, res: Response) => {
+userRouter.post("/login", async (req: Request, res: Response) => {
   const data = req.body;
   const username = data.username;
   const password = data.password;
 
-  const user = authController.login(username, password);
+  const user = await authController.login(username, password);
   if (user) {
     res.json({ message: "Login succesful", user });
   } else {

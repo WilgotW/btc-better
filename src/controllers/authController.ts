@@ -1,22 +1,37 @@
 import User from "../models/User";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export default class AuthController {
-  private users: User[] = [];
-
-  register(username: string, password: string) {
-    if (this.users.some((user) => user.username == username)) {
-      throw new Error("Username already taken");
+  async register(username: string, email: string, password: string) {
+    try {
+      const user = await prisma.users.create({
+        data: {
+          username: username,
+          email: email,
+          password: password,
+        },
+      });
+      return user;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Registration failed");
     }
-
-    const newUser = new User(this.users.length + 1, username, password);
-    this.users.push(newUser);
-    return newUser;
   }
 
-  login(username: string, password: string): User | undefined {
-    const user = this.users.find(
-      (user) => user.username === username && user.password === password
-    );
-    return user;
+  async login(username: string, password: string) {
+    try {
+      const user = await prisma.users.findFirst({
+        where: {
+          username: username,
+          password: password,
+        },
+      });
+      return user;
+    } catch (err) {
+      console.log(err);
+      return undefined;
+    }
   }
 }
