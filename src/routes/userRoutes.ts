@@ -6,7 +6,6 @@ const authController = new AuthController();
 
 userRouter.post("/register", async (req: Request, res: Response) => {
   const data = req.body;
-  //   res.json(data);
 
   const username = data.username;
   const email = data.email;
