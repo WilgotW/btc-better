@@ -15,7 +15,11 @@ userRouter.post("/register", async (req: Request, res: Response) => {
 
   if (username && password && email) {
     const user = await authController.register(username, email, password);
-    res.json(user);
+    if (user) {
+      res.json(user);
+    } else {
+      res.send("user already exist");
+    }
   } else {
     res.status(400).send("error");
   }

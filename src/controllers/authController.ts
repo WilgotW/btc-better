@@ -6,14 +6,24 @@ const prisma = new PrismaClient();
 export default class AuthController {
   async register(username: string, email: string, password: string) {
     try {
-      const user = await prisma.users.create({
-        data: {
-          username: username,
+      const existingUser = await prisma.users.findFirst({
+        where: {
           email: email,
-          password: password,
         },
       });
-      return user;
+
+      if (!existingUser) {
+        const user = await prisma.users.create({
+          data: {
+            username: username,
+            email: email,
+            password: password,
+          },
+        });
+
+        return user;
+      }
+      return undefined;
     } catch (err) {
       console.log(err);
       throw new Error("Registration failed");
