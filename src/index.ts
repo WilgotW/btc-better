@@ -13,5 +13,6 @@ app.get("/", (req, res: express.Response) => {
 
 //routes
 app.use("/user", userRouter);
+// app.use("/bet", )
 
 app.listen(4000, () => console.log("live"));
