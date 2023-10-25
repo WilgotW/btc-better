@@ -9,16 +9,15 @@ betRouter.post("/create", async (req: Request, res: Response) => {
     //create new bet
     const data = req.body;
     if(data){
-        const newBet: Bet = {
-            userId: data.userId,
-            ticker: data.ticker,
-            startDate: data.startDate,
-            endDate: data.endDate,
-            amount: data.amount,
-        }
-        
         try{
-            const newBet = await betController.createBet(newBet);
+            const newBet: Bet = await betController.createBet({
+                userId: data.userId,
+                ticker: data.ticker,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                amount: data.amount,
+            }
+            );
         }catch(err){
             throw new Error("error");
         }
