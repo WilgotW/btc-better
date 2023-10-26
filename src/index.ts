@@ -1,8 +1,6 @@
 import express from "express";
-import axios from "axios";
-import cheerio from "cheerio";
 import userRouter from "./routes/userRoutes";
-
+import betRouter from "./routes/betRoutes";
 const app = express();
 
 app.use((req, res, next) => {
@@ -16,12 +14,8 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.get("/", (req, res: express.Response) => {
-  res.send("home");
-});
-
 // Routes
 app.use("/user", userRouter);
-// app.use("/bet", )
+app.use("/bet", betRouter);
 
 app.listen(4000, () => console.log("Server is running on port 4000"));

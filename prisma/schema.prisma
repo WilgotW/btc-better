@@ -13,3 +13,11 @@ model users {
   email    String? @db.VarChar(80)
   password String? @db.VarChar(80)
 }
+model bets {
+  id     Int      @id @default(autoincrement())
+  ticker    String
+  userid    Int
+  startdate  Int
+  enddate    Int
+  amount Int
+}
