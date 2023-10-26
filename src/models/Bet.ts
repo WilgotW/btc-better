@@ -4,6 +4,8 @@ export default class Bet {
     public ticker: string,
     public startDate: Date,
     public endDate: Date,
-    public amount: number
+    public duration: number,
+    public amount: number,
+    public startValue: number
   ) {}
 }

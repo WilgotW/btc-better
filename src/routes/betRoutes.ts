@@ -16,7 +16,9 @@ betRouter.post("/create", async (req: Request, res: Response) => {
       ticker: data.ticker,
       startDate: betStart,
       endDate: betEnd,
+      duration: data.duration,
       amount: data.amount,
+      startValue: data.startValue,
     });
     if (newBet) {
       res.json(newBet);

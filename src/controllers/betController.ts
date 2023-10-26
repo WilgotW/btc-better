@@ -7,8 +7,10 @@ export default class BetController {
   async newBet(betData: Bet) {
     try {
       const betStartTimeStamp = Math.floor(betData.startDate.getTime() / 1000);
+      //minutes: n * 60 * 1000
+      const fromNow = betData.duration * 60 * 1000;
       const betEndTimeStamp = Math.floor(
-        (betData.endDate.getTime() + 60000) / 1000
+        (betData.endDate.getTime() + fromNow) / 1000
       );
 
       const newBet = await prisma.bets.create({
@@ -17,12 +19,14 @@ export default class BetController {
           ticker: betData.ticker,
           startdate: betStartTimeStamp,
           enddate: betEndTimeStamp,
+          duration: betData.duration,
           amount: betData.amount,
+          startvalue: betData.startValue,
         },
       });
       return newBet;
     } catch (err) {
-      throw new Error("error");
+      throw new Error("error creating new bet");
     }
   }
 

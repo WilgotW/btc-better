@@ -19,5 +19,7 @@ model bets {
   userid    Int
   startdate  Int
   enddate    Int
+  duration   Int
   amount Int
+  startvalue Int
 }
