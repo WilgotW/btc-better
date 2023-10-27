@@ -1,10 +1,11 @@
 import { Router, Response, Request } from "express";
-import BetController from "../controllers/betController";
+import BetController from "../controllers/BetController";
+import verifyToken from "../middleware/veryfyToken";
 
 const betRouter = Router();
 const betController = new BetController();
 
-betRouter.post("/create", async (req: Request, res: Response) => {
+betRouter.post("/create", verifyToken, async (req: Request, res: Response) => {
   const data = req.body;
   if (!data) return;
   try {
@@ -30,7 +31,7 @@ betRouter.post("/create", async (req: Request, res: Response) => {
   }
 });
 
-betRouter.post("/get-all", async (req: Request, res: Response) => {
+betRouter.post("/get-all", verifyToken, async (req: Request, res: Response) => {
   const id: number = req.body.userId;
   if (!id) res.status(400).send("no id found");
 
@@ -46,20 +47,24 @@ betRouter.post("/get-all", async (req: Request, res: Response) => {
   }
 });
 
-betRouter.post("/check-bets", async (req: Request, res: Response) => {
-  const id: number = req.body.userId;
-  if (!id) res.status(400).send("no id found");
+betRouter.post(
+  "/check-bets",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const id: number = req.body.userId;
+    if (!id) res.status(400).send("no id found");
 
-  try {
-    const doneBets = await betController.checkBetsEnd(id);
-    if (doneBets.length) {
-      res.json(doneBets);
-    } else {
-      res.send("no bets have ended");
+    try {
+      const doneBets = await betController.checkBetsEnd(id);
+      if (doneBets.length) {
+        res.json(doneBets);
+      } else {
+        res.send("no bets have ended");
+      }
+    } catch (err) {
+      throw new Error("error accessing bet data");
     }
-  } catch (err) {
-    throw new Error("error accessing bet data");
   }
-});
+);
 
 export default betRouter;

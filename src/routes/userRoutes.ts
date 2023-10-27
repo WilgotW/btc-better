@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express";
-import AuthController from "../controllers/authController";
+import UserController from "../controllers/UserController";
+import verifyToken from "../middleware/veryfyToken";
 
 const userRouter = Router();
-const authController = new AuthController();
+const authController = new UserController();
 
 userRouter.post("/register", async (req: Request, res: Response) => {
   const data = req.body;

@@ -1,9 +1,12 @@
 import User from "../models/User";
 import { PrismaClient } from "@prisma/client";
+import jwt, { Secret } from "jsonwebtoken";
+import * as dotenv from "dotenv";
 
 const prisma = new PrismaClient();
+dotenv.config();
 
-export default class AuthController {
+export default class UserController {
   async register(username: string, email: string, password: string) {
     try {
       const existingUser = await prisma.users.findFirst({
@@ -18,6 +21,7 @@ export default class AuthController {
             username: username,
             email: email,
             password: password,
+            balance: 10000,
           },
         });
 
@@ -38,7 +42,13 @@ export default class AuthController {
           password: password,
         },
       });
-      return user;
+      if (user) {
+        const key: string = process.env.SECRET_KEY || "";
+        const token = jwt.sign({ userId: user.id }, key, {
+          expiresIn: "1h",
+        });
+        return { user, token };
+      }
     } catch (err) {
       console.log(err);
       return undefined;
