@@ -13,6 +13,7 @@ export default function verifyToken(
 ) {
   const token = req.headers.authorization;
   if (!token) {
+    console.log("e");
     return res.sendStatus(401);
   }
   const key = process.env.SECRET_KEY;

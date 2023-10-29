@@ -31,12 +31,11 @@ betRouter.post("/create", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
-betRouter.post("/get-all", verifyToken, async (req: Request, res: Response) => {
-  const id: number = req.body.userId;
-  if (!id) res.status(400).send("no id found");
-
+betRouter.get("/get-all", verifyToken, async (req: Request, res: Response) => {
+  const key = req.get("authorization") || "";
+  console.log("key: " + key);
   try {
-    const allBets = await betController.allBets(id);
+    const allBets = await betController.allBets(key);
     if (allBets.length) {
       res.json(allBets);
     } else {
@@ -47,15 +46,14 @@ betRouter.post("/get-all", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
-betRouter.post(
+betRouter.get(
   "/check-bets",
   verifyToken,
   async (req: Request, res: Response) => {
-    const id: number = req.body.userId;
-    if (!id) res.status(400).send("no id found");
+    const key = req.get("key") || "";
 
     try {
-      const doneBets = await betController.checkBetsEnd(id);
+      const doneBets = await betController.checkBetsEnd(key);
       if (doneBets.length) {
         res.json(doneBets);
       } else {

@@ -2,6 +2,7 @@ import User from "../models/User";
 import { PrismaClient } from "@prisma/client";
 import jwt, { Secret } from "jsonwebtoken";
 import * as dotenv from "dotenv";
+import getUserId from "../utils/getUserId";
 
 const prisma = new PrismaClient();
 dotenv.config();
@@ -57,9 +58,7 @@ export default class UserController {
 
   async info(authKey: string) {
     try {
-      const key: string = process.env.SECRET_KEY || "";
-      const decoded = jwt.verify(authKey, key) as { userId: number };
-      const userId = decoded.userId;
+      const userId = getUserId(authKey);
 
       const user = await prisma.users.findUnique({
         where: {

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import Bet from "../models/Bet";
+import getUserId from "../utils/getUserId";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +31,9 @@ export default class BetController {
     }
   }
 
-  async allBets(userId: number) {
+  async allBets(authKey: string) {
+    const userId = getUserId(authKey);
+
     const userBets = await prisma.bets.findMany({
       where: {
         userid: userId,
@@ -39,7 +42,9 @@ export default class BetController {
     return userBets;
   }
 
-  async checkBetsEnd(userId: number) {
+  async checkBetsEnd(authKey: string) {
+    const userId = getUserId(authKey);
+
     const userBets = await prisma.bets.findMany({
       where: {
         userid: userId,
