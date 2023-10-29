@@ -34,11 +34,11 @@ export default class UserController {
     }
   }
 
-  async login(username: string, password: string) {
+  async login(email: string, password: string) {
     try {
       const user = await prisma.users.findFirst({
         where: {
-          username: username,
+          email: email,
           password: password,
         },
       });
@@ -52,6 +52,27 @@ export default class UserController {
     } catch (err) {
       console.log(err);
       return undefined;
+    }
+  }
+
+  async info(authKey: string) {
+    try {
+      const key: string = process.env.SECRET_KEY || "";
+      const decoded = jwt.verify(authKey, key) as { userId: number };
+      const userId = decoded.userId;
+
+      const user = await prisma.users.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (user) {
+        return user;
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error("failed to retrieve user info");
     }
   }
 }
