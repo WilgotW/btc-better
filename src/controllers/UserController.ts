@@ -46,7 +46,7 @@ export default class UserController {
       if (user) {
         const key: string = process.env.SECRET_KEY || "";
         const token = jwt.sign({ userId: user.id }, key, {
-          expiresIn: "1h",
+          expiresIn: "3h",
         });
         return { user, token };
       }
