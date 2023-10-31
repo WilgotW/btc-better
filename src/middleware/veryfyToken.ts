@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { Secret } from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import isExpired from "../utils/isExpired";
 
 const prisma = new PrismaClient();
 dotenv.config();
@@ -11,11 +12,16 @@ export default function verifyToken(
   res: Response,
   next: NextFunction
 ) {
-  const token = req.headers.authorization;
+  const token: string = req.headers.authorization || "";
+  console.log("ja: " + token);
+  console.log(isExpired(token));
   if (!token) {
-    console.log("e");
     return res.sendStatus(401);
   }
+  // if (isExpired(token)) {
+  //   return res.send("jwt expired");
+  // }
+
   const key = process.env.SECRET_KEY;
   jwt.verify(token, key as Secret, async (err, decoded: any) => {
     if (err) {

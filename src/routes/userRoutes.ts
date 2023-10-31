@@ -39,7 +39,7 @@ userRouter.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.get("/info", async (req: Request, res: Response) => {
+userRouter.get("/info", verifyToken, async (req: Request, res: Response) => {
   const key = req.get("key") || "";
 
   const user = await userController.info(key);
