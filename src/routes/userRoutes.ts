@@ -40,7 +40,7 @@ userRouter.post("/login", async (req: Request, res: Response) => {
 });
 
 userRouter.get("/info", verifyToken, async (req: Request, res: Response) => {
-  const key = req.get("key") || "";
+  const key = req.get("authorization") || "";
 
   const user = await userController.info(key);
   if (user) {
