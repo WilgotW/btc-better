@@ -8,19 +8,24 @@ const betController = new BetController();
 betRouter.post("/create", verifyToken, async (req: Request, res: Response) => {
   const data = req.body;
   if (!data) return;
+
+  const key = req.get("authorization") || "";
   try {
     const betStart = new Date();
     const betEnd = new Date();
 
-    const newBet = await betController.newBet({
-      userId: data.userId,
-      ticker: data.ticker,
-      startDate: betStart,
-      endDate: betEnd,
-      duration: data.duration,
-      amount: data.amount,
-      startValue: data.startValue,
-    });
+    const newBet = await betController.newBet(
+      {
+        userId: data.userId,
+        ticker: data.ticker,
+        startDate: betStart,
+        endDate: betEnd,
+        duration: data.duration,
+        amount: data.amount,
+        startValue: data.startValue,
+      },
+      key
+    );
     if (newBet) {
       res.json(newBet);
     } else {
@@ -33,7 +38,6 @@ betRouter.post("/create", verifyToken, async (req: Request, res: Response) => {
 
 betRouter.get("/get-all", verifyToken, async (req: Request, res: Response) => {
   const key = req.get("authorization") || "";
-  console.log("key: " + key);
   try {
     const allBets = await betController.allBets(key);
     if (allBets.length) {

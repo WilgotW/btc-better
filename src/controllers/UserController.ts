@@ -52,7 +52,7 @@ export default class UserController {
         if (passwordMatch) {
           const key: string = process.env.SECRET_KEY || "";
           const token = jwt.sign({ userId: user.id }, key, {
-            expiresIn: "3h",
+            expiresIn: "1h",
           });
           return { user, token };
         }

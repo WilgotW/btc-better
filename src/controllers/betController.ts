@@ -5,7 +5,8 @@ import getUserId from "../utils/getUserId";
 const prisma = new PrismaClient();
 
 export default class BetController {
-  async newBet(betData: Bet) {
+  async newBet(betData: Bet, authKey: string) {
+    const userId = getUserId(authKey);
     try {
       const betStartTimeStamp = Math.floor(betData.startDate.getTime() / 1000);
       //minutes: n * 60 * 1000
@@ -16,7 +17,7 @@ export default class BetController {
 
       const newBet = await prisma.bets.create({
         data: {
-          userid: betData.userId,
+          userid: userId,
           ticker: betData.ticker,
           startdate: betStartTimeStamp,
           enddate: betEndTimeStamp,
