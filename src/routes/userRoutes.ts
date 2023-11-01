@@ -45,6 +45,8 @@ userRouter.get("/info", verifyToken, async (req: Request, res: Response) => {
   const user = await userController.info(key);
   if (user) {
     res.json(user);
+  } else {
+    res.sendStatus(400);
   }
 });
 
