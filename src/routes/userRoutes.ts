@@ -46,7 +46,7 @@ userRouter.get("/info", verifyToken, async (req: Request, res: Response) => {
   if (user) {
     res.json(user);
   } else {
-    res.sendStatus(400);
+    res.sendStatus(401);
   }
 });
 

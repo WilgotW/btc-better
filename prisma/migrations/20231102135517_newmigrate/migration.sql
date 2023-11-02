@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "bets" ALTER COLUMN "startvalue" SET DATA TYPE DOUBLE PRECISION;

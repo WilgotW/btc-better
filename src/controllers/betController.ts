@@ -8,8 +8,21 @@ export default class BetController {
   async newBet(betData: Bet, authKey: string) {
     const userId = getUserId(authKey);
     try {
+      const user = await prisma.users.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        throw new Error("error getting user");
+      }
+      const updatedBalance = user.balance - betData.amount;
+
+      if (updatedBalance < 0) {
+        throw new Error("insufficient balance");
+      }
+
       const betStartTimeStamp = Math.floor(betData.startDate.getTime() / 1000);
-      //minutes: n * 60 * 1000
+      //minutes: n * 60 * 1000 (change to hour)
       const fromNow = betData.duration * 60 * 1000;
       const betEndTimeStamp = Math.floor(
         (betData.endDate.getTime() + fromNow) / 1000
@@ -26,6 +39,14 @@ export default class BetController {
           startvalue: betData.startValue,
         },
       });
+
+      await prisma.users.update({
+        where: { id: userId },
+        data: {
+          balance: updatedBalance,
+        },
+      });
+
       return newBet;
     } catch (err) {
       throw new Error("error creating new bet");

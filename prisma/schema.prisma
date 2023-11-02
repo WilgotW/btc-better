@@ -12,7 +12,7 @@ model users {
   username String @db.VarChar(80)
   email    String @db.VarChar(80)
   password String @db.VarChar(80)
-  balance  Float?
+  balance  Float
 }
 model bets {
   id     Int      @id @default(autoincrement())
@@ -22,5 +22,5 @@ model bets {
   enddate    Int
   duration   Int
   amount Int
-  startvalue Int
+  startvalue Float
 }

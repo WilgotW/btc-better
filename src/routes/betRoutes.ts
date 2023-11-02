@@ -10,6 +10,7 @@ betRouter.post("/create", verifyToken, async (req: Request, res: Response) => {
   if (!data) return;
 
   const key = req.get("authorization") || "";
+  console.log(data);
   try {
     const betStart = new Date();
     const betEnd = new Date();
