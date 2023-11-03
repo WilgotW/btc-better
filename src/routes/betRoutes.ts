@@ -10,7 +10,7 @@ betRouter.post("/create", verifyToken, async (req: Request, res: Response) => {
   if (!data) return;
 
   const key = req.get("authorization") || "";
-  console.log(data);
+  console.log("collected: " + data);
   try {
     const betStart = new Date();
     const betEnd = new Date();
@@ -55,7 +55,7 @@ betRouter.get(
   "/check-bets",
   verifyToken,
   async (req: Request, res: Response) => {
-    const key = req.get("key") || "";
+    const key = req.get("authorization") || "";
 
     try {
       const doneBets = await betController.checkBetsEnd(key);
@@ -66,6 +66,24 @@ betRouter.get(
       }
     } catch (err) {
       throw new Error("error accessing bet data");
+    }
+  }
+);
+
+betRouter.post(
+  "/add-balance",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const key = req.get("authorization") || "";
+    try {
+      const newValue = req.body.newValue;
+      console.log("the new value" + newValue);
+      const updatedUser = await betController.addBalance(key, newValue);
+      if (updatedUser) {
+        res.send(updatedUser);
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 );

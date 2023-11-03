@@ -23,7 +23,7 @@ export default class BetController {
 
       const betStartTimeStamp = Math.floor(betData.startDate.getTime() / 1000);
       //minutes: n * 60 * 1000 (change to hour)
-      const fromNow = betData.duration * 60 * 1000;
+      const fromNow = betData.duration * 60 * 1000 * 0.1; // remove 0.1
       const betEndTimeStamp = Math.floor(
         (betData.endDate.getTime() + fromNow) / 1000
       );
@@ -79,9 +79,42 @@ export default class BetController {
     const betsDone = userBets.filter((bet) => {
       //check if bet is done
       if (bet.enddate <= currentTimestamp) {
-        return bet;
+        //set done to true
+        if (!bet.done) {
+          this.setToDone(bet.id);
+          return bet;
+        }
       }
     });
     return betsDone;
+  }
+
+  async setToDone(betId: number) {
+    await prisma.bets.update({
+      where: { id: betId },
+      data: {
+        done: true,
+      },
+    });
+  }
+  async addBalance(authKey: string, amount: number) {
+    const userId = getUserId(authKey);
+
+    const user = await prisma.users.findUnique({ where: { id: userId } });
+
+    if (user) {
+      const newAmount = user.balance + amount;
+      console.log(newAmount);
+      console.log(user.balance);
+      await prisma.users.update({
+        where: { id: userId },
+        data: {
+          balance: newAmount,
+        },
+      });
+      return user;
+    } else {
+      throw new Error("user not found");
+    }
   }
 }
