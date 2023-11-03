@@ -75,10 +75,14 @@ betRouter.post(
   verifyToken,
   async (req: Request, res: Response) => {
     const key = req.get("authorization") || "";
+    const data = req.body;
     try {
-      const newValue = req.body.newValue;
-      console.log("the new value" + newValue);
-      const updatedUser = await betController.addBalance(key, newValue);
+      const updatedUser = await betController.addBalance(
+        key,
+        data.newValue,
+        data.startValue,
+        data.amount
+      );
       if (updatedUser) {
         res.send(updatedUser);
       }

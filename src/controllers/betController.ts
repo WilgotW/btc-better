@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import Bet from "../models/Bet";
 import getUserId from "../utils/getUserId";
+import maxDecimal from "../utils/maxDecimal";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +16,7 @@ export default class BetController {
       if (!user) {
         throw new Error("error getting user");
       }
-      const updatedBalance = user.balance - betData.amount;
+      const updatedBalance = maxDecimal(user.balance - betData.amount, 2);
 
       if (updatedBalance < 0) {
         throw new Error("insufficient balance");
@@ -97,15 +98,24 @@ export default class BetController {
       },
     });
   }
-  async addBalance(authKey: string, amount: number) {
+  async addBalance(
+    authKey: string,
+    newValue: number,
+    startValue: number,
+    amount: number
+  ) {
     const userId = getUserId(authKey);
+
+    //get user => get bet => calculate procentual gain from bet => add to balance
 
     const user = await prisma.users.findUnique({ where: { id: userId } });
 
     if (user) {
-      const newAmount = user.balance + amount;
-      console.log(newAmount);
-      console.log(user.balance);
+      //calculate difference
+      const difference = newValue / startValue;
+      const gain = difference * amount;
+      const newAmount = maxDecimal(user.balance + gain, 2);
+
       await prisma.users.update({
         where: { id: userId },
         data: {
