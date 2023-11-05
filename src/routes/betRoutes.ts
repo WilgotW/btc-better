@@ -79,6 +79,7 @@ betRouter.post(
     try {
       const updatedUser = await betController.addBalance(
         key,
+        data.betId,
         data.newValue,
         data.startValue,
         data.amount

@@ -24,7 +24,7 @@ export default class BetController {
 
       const betStartTimeStamp = Math.floor(betData.startDate.getTime() / 1000);
       //minutes: n * 60 * 1000 (change to hour)
-      const fromNow = betData.duration * 60 * 1000 * 0.1; // remove 0.1
+      const fromNow = betData.duration * 60 * 1000 * 0.1;
       const betEndTimeStamp = Math.floor(
         (betData.endDate.getTime() + fromNow) / 1000
       );
@@ -98,8 +98,10 @@ export default class BetController {
       },
     });
   }
+
   async addBalance(
     authKey: string,
+    betId: number,
     newValue: number,
     startValue: number,
     amount: number
@@ -115,6 +117,15 @@ export default class BetController {
       const difference = newValue / startValue;
       const gain = difference * amount;
       const newAmount = maxDecimal(user.balance + gain, 2);
+
+      //update bet profit
+      const betProfit = maxDecimal(gain - amount, 2);
+      await prisma.bets.update({
+        where: { id: betId },
+        data: {
+          profit: betProfit,
+        },
+      });
 
       await prisma.users.update({
         where: { id: userId },

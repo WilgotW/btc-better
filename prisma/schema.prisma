@@ -24,4 +24,5 @@ model bets {
   amount Int
   startvalue Float
   done Boolean @default(false)
+  profit Float?
 }
