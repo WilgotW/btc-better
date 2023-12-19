@@ -77,15 +77,16 @@ export default class BetController {
     const date = new Date();
     const currentTimestamp = Math.floor(date.getTime() / 1000);
 
+    //REMOVED TIME. NO TIME LIMITS
     const betsDone = userBets.filter((bet) => {
       //check if bet is done
-      if (bet.enddate <= currentTimestamp) {
-        //set done to true
-        if (!bet.done) {
-          this.setToDone(bet.id);
-          return bet;
-        }
+      // if (bet.enddate <= currentTimestamp) {
+      //set done to true
+      if (!bet.done) {
+        this.setToDone(bet.id);
+        return bet;
       }
+      // }
     });
     return betsDone;
   }
