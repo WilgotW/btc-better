@@ -61,6 +61,9 @@ export default class BetController {
       where: {
         userid: userId,
       },
+      orderBy: {
+        startdate: "asc",
+      },
     });
     return userBets;
   }
